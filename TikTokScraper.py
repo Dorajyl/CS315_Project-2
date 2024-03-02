@@ -105,19 +105,18 @@ class PageTiktok(BaseCase): #inherit BaseCase
         file_exists = os.path.isfile(csv_file_path) # checks if file exists already
         
         with open(csv_file_path, 'a', newline='', encoding='utf-8') as csv_file:
-            fieldnames = ['batch', 'index', 'hashtag', 'author', 'likes','comments','shares','saves']
+            fieldnames = ['index', 'numHashtag', 'numAuthor', 'numLikes','numComments', 'numShares','numSaves']
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
             if not file_exists:
                 writer.writeheader() #writes header only once
 
             for video_info in data:
-                writer.writerow({
-                    'batch': video_info['batch'], 
-                    'index': video_info['index'],
-                    'hashtag': ', '.join(video_info['hashtag']),  # Convert list to comma-separated string
-                    'author': video_info['author'],
-                    'likes': video_info['likes'],
-                    'comments': video_info['comments'],
-                    'shares': video_info['shares'],
-                    'saves': video_info['saves']
+                writer.writerow({ 
+                    'numIndex': video_info['index'],
+                    'numHashtag': ', '.join(video_info['hashtag']),  # Convert list to comma-separated string
+                    'numAuthor': video_info['author'],
+                    'numLikes': video_info['likes'],
+                    'numComments': video_info['comments'],
+                    'numShares': video_info['shares'],
+                    'numSaves': video_info['saves']
                 })
