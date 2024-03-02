@@ -1,5 +1,4 @@
 from seleniumbase import Driver
-#from selenium import webdriver
 from selenium.webdriver.common.by import By # contains operators for the type of search we want to do
 import time
 from seleniumbase import BaseCase
@@ -12,14 +11,6 @@ import numpy as np
 import csv
 from datetime import datetime
 import os.path
-
-"""
-1 batch = the number of posts available on page before scrolling down and loading more.
-"""
-
-"""
-1 batch = the number of posts available on page before scrolling down and loading more.
-"""
 
 class PageTiktok(BaseCase): #inherit BaseCase
     predefined_hashtag_list = ["viral","foryou"]
@@ -44,8 +35,7 @@ class PageTiktok(BaseCase): #inherit BaseCase
             shares = self.get_stats(video,2)
             saves = self.get_stats(video,3)
             hashtag = self.get_hashtag(video)
-            batch_number = self.batch_num
-            summary.append({'batch': batch_number, 'index': index, 'video': video, 'hashtag': hashtag, 'author': author, 'likes': likes, 'comments': comments, 'shares':shares, 'saves': saves})
+            summary.append({'index': index, 'video': video, 'hashtag': hashtag, 'author': author, 'likes': likes, 'comments': comments, 'shares':shares, 'saves': saves})
 
         return summary
         
@@ -115,7 +105,7 @@ class PageTiktok(BaseCase): #inherit BaseCase
         file_exists = os.path.isfile(csv_file_path) # checks if file exists already
         
         with open(csv_file_path, 'a', newline='', encoding='utf-8') as csv_file:
-            fieldnames = ['batch', 'index', 'music', 'hashtag', 'author', 'likes','comments','shares','saves']
+            fieldnames = ['batch', 'index', 'hashtag', 'author', 'likes','comments','shares','saves']
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
             if not file_exists:
                 writer.writeheader() #writes header only once
