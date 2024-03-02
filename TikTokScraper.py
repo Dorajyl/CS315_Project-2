@@ -12,6 +12,10 @@ import csv
 from datetime import datetime
 import os.path
 
+# Write function that enters url and iterates through list of urls from JSON file
+# Write function to click on comments
+# Chnage write csv to write json
+
 class PageTiktok(BaseCase): #inherit BaseCase
     predefined_hashtag_list = ["viral","foryou"]
     chromebrowser = Driver(uc=True)
@@ -21,7 +25,6 @@ class PageTiktok(BaseCase): #inherit BaseCase
     all_videos_on_page = []
     current_time = datetime.now().strftime("%m-%d-%H-%M")
 
-    
     def info_videos(self, videoList):
         '''
         When given a list of video divs, return a summary of each video
@@ -39,7 +42,6 @@ class PageTiktok(BaseCase): #inherit BaseCase
 
         return summary
         
-
     def get_author(self, video):
         try:
             author_element = video.find_element(By.XPATH, ".//*[@class='css-1k5oywg-H3AuthorTitle emt6k1z0']")
@@ -51,6 +53,23 @@ class PageTiktok(BaseCase): #inherit BaseCase
         except StaleElementReferenceException as sere:
             print(sere)
             print("Author element not found.")
+            return None
+        
+    def get_comments(self, video):
+        # Add click comments
+        try:
+            comment_elements = video.find_elements(By.Class, "css-xm2h10-PCommentText e1g2efjf6")
+            comments = []
+            for comment in comment_elements:
+                comments.append(comment.text)
+            return comments if comment_elements else None
+        except NoSuchElementException as nsee:
+            print(nsee)
+            print("Comment elements not found.")
+            return None
+        except StaleElementReferenceException as sere:
+            print(sere)
+            print("Comment elements not found.")
             return None
 
     def get_stats(self, video, target):
