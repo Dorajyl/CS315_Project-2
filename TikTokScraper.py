@@ -13,7 +13,7 @@ from datetime import datetime
 import os.path
 
 # Write function that enters url and iterates through list of urls from JSON file
-# Write function to click on comments
+# Change get_comments function to click on comments
 # Chnage write csv to write json
 
 class PageTiktok(BaseCase): #inherit BaseCase
