@@ -1,9 +1,11 @@
 import json
 import pyktok as pyk
 import sys
+import browser_cookie3
 
 def collect_metadata(inputFile, outputFile):
-    """Call pyktok with a list of URLs to collect post metadata.
+    """
+    Call pyktok with a list of URLs to collect post metadata.
     """
 
     try:
