@@ -6,7 +6,19 @@ import matplotlib.pyplot as plt
 df = pd.read_csv("data/metadata.csv", header=0, usecols=["video_id", 
                                                          "video_timestamp",
                                                          "author_username",
-                                                         "author_name"])
+                                                         "author_name",
+                                                         "data_user"])
+
+# Datasets for each user
+users = {
+    "user_0001": df[df['data_user'] == "user_0001"].copy(),
+    "user_0002": df[df['data_user'] == "user_0002"].copy(),
+    "user_0003": df[df['data_user'] == "user_0003"].copy(),
+    "user_0004": df[df['data_user'] == "user_0004"].copy(),
+    "user_0005": df[df['data_user'] == "user_0005"].copy(),
+    "user_0006": df[df['data_user'] == "user_0006"].copy(),
+    "user_0007": df[df['data_user'] == "user_0007"].copy()
+}
 
 # Dataframe of news accounts
 accounts_df = pd.read_csv("data/news_accounts.csv", header=0)
@@ -15,35 +27,67 @@ accounts_df = pd.read_csv("data/news_accounts.csv", header=0)
 def is_news_account(username):
     return username in set(accounts_df['Username'])
 
-# Mark news_account column as True if the username is a news account
-df['news_account'] = df['author_username'].apply(is_news_account)
+# Function to get top accounts for a given user
+def get_top_accounts(user_df, n=5):
+    # Filter the dataframe to include only news-related accounts
+    news_df = user_df[user_df['author_username'].apply(is_news_account)]
 
-# Filter the dataframe to include only news-related accounts
-news_df = df[df['news_account']]
+    # Group by news account and count the number of videos each account appears in
+    news_account_counts = news_df['author_username'].value_counts()
 
-# Group by news account and count the number of videos each account appears in
-news_account_counts = news_df['author_username'].value_counts()
+    # Select the top news-related accounts
+    top_news_accounts = news_account_counts.head(n)
 
-# Select the top 5 news-related accounts
-top5_news_accounts = news_account_counts.head(5)
+    return top_news_accounts
 
-# Plot the top 5 most common news accounts
-color_mapping = {
-    'brutamerica': '#a6cee3',
-    'yahooaustralia': '#1f78b4',
-    'espn': '#ff66b2',
-    'dailymail': '#33a02c',
-    'nfl': '#fc8d59',
-}
+# Loop through each user
+for user, user_df in users.items():
+    # Get top accounts for the user
+    top_accounts = get_top_accounts(user_df)
 
-# Plot the bar graph
-plt.figure(figsize=(10, 6))
-sns.barplot(x=top5_news_accounts.index, y=top5_news_accounts.values, palette=color_mapping)
+    # Plot the top accounts
+    plt.figure(figsize=(10, 8))
+
+    # Define specific color codes for specific countries
+    color_mapping = ['#a6cee3', '#1f78b4', '#b2df8a', '#33a02c', '#fc8d59', 
+                     '#ff66b2', '#e41a1c', '#ff7f00', '#cba0d5', '#6a3d9a']
+
+    sns.barplot(x=top_accounts.index, y=top_accounts.values, palette=color_mapping)
+
+    # Add labels and title
+    plt.xlabel(f'News Accounts for {user}', fontweight='bold')
+    plt.ylabel('Videos', fontweight='bold')
+    plt.title(f'Top News-Related Account for {user}', fontweight='bold', fontsize=14)
+
+    # Remove top border and set x and y axis lines to black
+    ax = plt.gca()
+    ax.spines['top'].set_visible(False)
+    ax.spines['bottom'].set_color('black')
+    ax.spines['left'].set_color('black')
+    ax.spines['right'].set_visible(False)
+
+    # Removing legend
+    plt.legend([],[], frameon=False)  # Hide legend for individual points
+
+    # Code for presentation formatting (comment out)
+    plt.title('')
+    plt.gca().set_facecolor('none')
+
+    # Saving the plot as a PNG file
+    plt.savefig(f"visualizations//plots/news_accounts/accounts_{user}.png")
+
+# Plot for all users
+# Get top 10 accounts for all users combined
+all_users_top10_accounts = get_top_accounts(df, n=10)
+
+# Plot the top 10 accounts for all users
+plt.figure(figsize=(10, 8))
+sns.barplot(x=all_users_top10_accounts.index, y=all_users_top10_accounts.values, palette=color_mapping)
 
 # Add labels and title
 plt.xlabel('News Account', fontweight='bold')
 plt.ylabel('Videos', fontweight='bold')
-plt.title('Top News-Related Account', fontweight='bold', fontsize=14)
+plt.title('Top News-Related Account for All Users', fontweight='bold', fontsize=14)
 
 # Remove top border and set x and y axis lines to black
 ax = plt.gca()
@@ -59,7 +103,8 @@ plt.legend([],[], frameon=False)  # Hide legend for individual points
 plt.title('')
 plt.gca().set_facecolor('none')
 
-# Save the plot as a PNG file
-plt.savefig("visualizations/news_accounts.png", transparent=True)
-plt.show()
+# Rotate x-axis labels
+plt.xticks(rotation=20)
 
+# Saving the plot as a PNG file
+plt.savefig("visualizations/plots/news_accounts/accounts_meta.png")
