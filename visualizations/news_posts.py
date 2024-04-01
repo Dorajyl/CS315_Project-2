@@ -4,8 +4,8 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 # Load in video data, filtering out unnecessary columns
-df = pd.read_csv("cs315project2datacollection/results.csv", header=0, usecols=["video_id", 
-                                                                               "video_description"])
+df = pd.read_csv("data/metadata.csv", header=0, usecols=["video_id", 
+                                                         "video_description"])
 
 # Function to extract hashtags from a string
 def extract_hashtags(description):

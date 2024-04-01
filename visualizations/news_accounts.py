@@ -3,10 +3,10 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 # Load in video data, filtering out unnecessary columns
-df = pd.read_csv("cs315project2datacollection/results.csv", header=0, usecols=["video_id", 
-                                                                               "video_timestamp",
-                                                                               "author_username",
-                                                                               "author_name"])
+df = pd.read_csv("data/metadata.csv", header=0, usecols=["video_id", 
+                                                         "video_timestamp",
+                                                         "author_username",
+                                                         "author_name"])
 
 # Dataframe of news accounts
 accounts_df = pd.read_csv("data/news_accounts.csv", header=0)
